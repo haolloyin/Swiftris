@@ -14,11 +14,11 @@
                         <viewControllerLayoutGuide type="bottom" id="qHh-Mt-9TT"/>
                     </layoutGuides>
                     <view key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" id="3se-qz-xqx" customClass="SKView">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ffe-mf-uXS">
-                                <rect key="frame" x="224" y="118" width="84" height="100"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ffe-mf-uXS">
+                                <rect key="frame" x="511" y="140" width="84" height="100"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="whitebg.png" translatesAutoresizingMaskIntoConstraints="NO" id="hxq-gl-eUi">
                                         <rect key="frame" x="0.0" y="0.0" width="84" height="100"/>
@@ -37,9 +37,13 @@
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="GJ0-Mt-acG"/>
+                                    <constraint firstAttribute="width" constant="84" id="SuW-76-Ut4"/>
+                                </constraints>
                             </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Rkd-Sz-wON">
-                                <rect key="frame" x="224" y="237" width="84" height="100"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rkd-Sz-wON">
+                                <rect key="frame" x="511" y="260" width="84" height="100"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="whitebg.png" translatesAutoresizingMaskIntoConstraints="NO" id="G2h-gL-Dt0">
                                         <rect key="frame" x="0.0" y="0.0" width="84" height="100"/>
@@ -58,10 +62,20 @@
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="jL1-Vj-B6l"/>
+                                    <constraint firstAttribute="width" constant="84" id="jpf-x3-2Kx"/>
+                                </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="ffe-mf-uXS" firstAttribute="top" secondItem="8aa-yV-Osq" secondAttribute="bottom" constant="120" id="2lM-yo-R3q"/>
+                            <constraint firstItem="Rkd-Sz-wON" firstAttribute="top" secondItem="ffe-mf-uXS" secondAttribute="bottom" constant="20" id="tAb-sA-grN"/>
+                            <constraint firstAttribute="trailing" secondItem="ffe-mf-uXS" secondAttribute="trailing" constant="5" id="tJ5-Va-qgT"/>
+                            <constraint firstAttribute="trailing" secondItem="Rkd-Sz-wON" secondAttribute="trailing" constant="5" id="yQu-rg-3kQ"/>
+                        </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="Hq7-F7-xqk" appends="YES" id="Neu-hQ-IQk"/>
                             <outletCollection property="gestureRecognizers" destination="Jro-JV-wOU" appends="YES" id="cYA-eo-RSM"/>
@@ -69,7 +83,6 @@
                         </connections>
                     </view>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
-                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <outlet property="levelLabel" destination="hfM-64-waS" id="AvK-xb-wYj"/>
                         <outlet property="scoreLabel" destination="bRU-Qj-zcU" id="iQg-9p-Cpx"/>

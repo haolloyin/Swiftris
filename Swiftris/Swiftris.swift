@@ -6,17 +6,19 @@
 //  Copyright © 2016 hao. All rights reserved.
 //
 
+import Foundation
+
 // 一共 10 列 20 行
 let NumColumns = 10
 let NumRows = 20
 
 // 每个新的 Shape 的锚点在第 4 列第 0 行
-let StartingColumn = 4
+//let StartingColumn = 4
 let StartingRow = 0
 
 // 下一个 Shape 的锚点在第 12 列第 1 行
-let PreviewColumn = 12
-let PreviewRow = 1
+//let PreviewColumn = 12
+//let PreviewRow = 1
 
 let PointsPerLine = 10
 let LevelThreshold = 1000
@@ -54,16 +56,38 @@ class Swiftris {
     var score = 0
     var level = 1
     
-    init() {
+    let columns: Int
+    let rows: Int
+    
+    let previewColumn: Int
+    let previewRow: Int
+    
+    let startingColumn: Int
+    
+//    init() {
+//        fallingShape = nil
+//        nextShape = nil
+//        blockArray = Array2D<Block>(columns: self.columns, rows: self.rows)
+//    }
+    
+    init(columns: Int, rows: Int) {
         fallingShape = nil
         nextShape = nil
-        blockArray = Array2D<Block>(columns: NumColumns, rows: NumRows)
+        blockArray = Array2D<Block>(columns: columns, rows: rows)
+        self.columns = columns
+        self.rows = rows
+        
+        previewColumn = columns + 2
+        previewRow = 1
+        startingColumn = columns / 2
+        
+        NSLog("Swiftris columns=\(self.columns), rows=\(self.rows)")
     }
     
     // #5
     func beginGame() {
         if (nextShape == nil) {
-            nextShape = Shape.random(PreviewColumn, startingRow: PreviewRow)
+            nextShape = Shape.random(previewColumn, startingRow: previewRow)
         }
         
         delegate?.gameDidBegin(self)
@@ -72,13 +96,13 @@ class Swiftris {
     // #6
     func newShape() -> (fallingShape:Shape?, nextShape:Shape?) {
         fallingShape = nextShape
-        nextShape = Shape.random(PreviewColumn, startingRow: PreviewRow)
-        fallingShape?.moveTo(StartingColumn, row: StartingRow)
+        nextShape = Shape.random(previewColumn, startingRow: previewRow)
+        fallingShape?.moveTo(startingColumn, row: StartingRow)
         
         // detectIllegalPlacement() == false 为假，即位于非法位置，执行 else 块，即游戏结束
         guard detectIllegalPlacement() == false else {
             nextShape = fallingShape
-            nextShape!.moveTo(PreviewColumn, row: PreviewRow)
+            nextShape!.moveTo(previewColumn, row: previewRow)
             endGame()
             return (nil, nil)
         }
@@ -91,8 +115,8 @@ class Swiftris {
             return false // 当前没有正在下落的 Shape，必然不需要判断位置是否非法，会生成下一个 Shape 再去判断
         }
         for block in shape.blocks {
-            if block.column < 0 || block.column >= NumColumns
-                || block.row < 0 || block.row >= NumRows {
+            if block.column < 0 || block.column >= self.columns
+                || block.row < 0 || block.row >= self.rows {
                 // 如果有一个 Block 的位置超出边界则非法
                 return true
             } else if blockArray[block.column, block.row] != nil {
@@ -123,7 +147,7 @@ class Swiftris {
         
         // 仅当当前 Shape 与 UI 底部碰触，或者下一行已经由其他 Block，则说明接触了，不能再下落
         for bottomBlock in shape.bottomBlocks {
-            if bottomBlock.row == NumRows - 1
+            if bottomBlock.row == self.rows - 1
                 || blockArray[bottomBlock.column, bottomBlock.row + 1] != nil {
                 return true
             }
@@ -142,10 +166,10 @@ class Swiftris {
         var removedLines = Array<Array<Block>>()
         
         // 反向从最底部开始判断
-        for row in (1...NumRows-1).reverse() {
+        for row in (1...self.rows-1).reverse() {
             var rowOfBlocks = Array<Block>()
             // 从左到右判断每一列
-            for column in 0..<NumColumns {
+            for column in 0..<self.columns {
                 guard let block = blockArray[column, row] else {
                     // 只要某一列没有 Block，直接 continue 即 rowOfBlocks 不会被追加
                     continue
@@ -154,7 +178,7 @@ class Swiftris {
             }
             
             // 有 Block 的数目等于列数时，才需要准备移除，然后设置为空
-            if rowOfBlocks.count == NumColumns {
+            if rowOfBlocks.count == self.columns {
                 removedLines.append(rowOfBlocks)
                 for block in rowOfBlocks {
                     blockArray[block.column, block.row] = nil
@@ -175,7 +199,7 @@ class Swiftris {
         }
         
         var fallenBlocks = Array<Array<Block>>()
-        for column in 0..<NumColumns {
+        for column in 0..<self.columns {
             var fallenBlocksArray = Array<Block>()
             // #14
             
@@ -184,7 +208,7 @@ class Swiftris {
                     continue
                 }
                 var newRow = row
-                while (newRow < NumRows - 1 && blockArray[column, newRow + 1] == nil) {
+                while (newRow < self.rows - 1 && blockArray[column, newRow + 1] == nil) {
                     newRow += 1
                 }
                 block.row = newRow
@@ -278,9 +302,9 @@ class Swiftris {
     
     func removeAllBlocks() -> Array<Array<Block>> {
         var allBlocks = Array<Array<Block>>()
-        for row in 0..<NumRows {
+        for row in 0..<self.rows {
             var rowOfBlocks = Array<Block>()
-            for column in 0..<NumColumns {
+            for column in 0..<self.columns {
                 guard let block = blockArray[column, row] else {
                     continue
                 }

@@ -29,19 +29,24 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
         let skView = view as! SKView
         skView.multipleTouchEnabled = false
         
-        scene = GameScene(size: skView.bounds.size)
+        let columns = Int((skView.bounds.size.width - PanelWidth - PanelPadding * 3) / 20.0) - 1
+        let rows = Int((skView.bounds.size.height - 150) / 20.0)
+        
+        NSLog("size=\(skView.bounds.size)")
+        NSLog("columns=\(columns), rows=\(rows)")
+        
+//        scene = GameScene(size: skView.bounds.size)
+        scene = GameScene(size: skView.bounds.size, columns: columns, rows: rows)
         scene.scaleMode = .AspectFill
         // #13
         scene.tick = didTick // GameScene 的时钟回调 Controller 的 didTick() 方法
         
-        swiftris = Swiftris()
+        swiftris = Swiftris(columns: columns, rows: rows)
         swiftris.delegate = self
         swiftris.beginGame() // 游戏开始了
         
         // Present the scene.
         skView.presentScene(scene) // 展示出 GameScene
-        
-        NSLog("GameViewController.viewDidLoad, levelLabel=\(levelLabel), scoreLabel=\(scoreLabel)")
     }
     
     override func prefersStatusBarHidden() -> Bool {
@@ -117,9 +122,6 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
     }
     
     func gameDidBegin(swiftris: Swiftris) {
-        
-        NSLog("GameViewController.gameDidBegin")
-        
         levelLabel.text = "\(swiftris.level)"
         scoreLabel.text = "\(swiftris.score)"
         scene.tickLengthMillis = TickLengthLevelOne

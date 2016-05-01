@@ -10,11 +10,15 @@ import SpriteKit
 
 // #7
 let BlockSize: CGFloat = 20.0 // Sprites.atlas 目录下的图片本身就是 20x20 的
-let LayerPosition = CGPoint(x: 6, y: -6)
+let LayerPosition = CGPoint(x: 3, y: -5)
 
 // NSTimeInterval 实际上是 Double 类型，而且以 秒 计数。
 // 这里把初始设置为每 600ms（0.6秒）则方块下降一格，故意把 NSTimeInterval 当做毫秒来用
 let TickLengthLevelOne = NSTimeInterval(600)
+
+// 为了支持 AutoLayout
+let PanelWidth: CGFloat = 84.0  // 右边记分面板的宽度
+let PanelPadding: CGFloat = 5.0 // 右边记分面板的边距
 
 
 // https://www.bloc.io/tutorials/swiftris-build-your-first-ios-game-with-swift#!/chapters/680
@@ -36,7 +40,7 @@ class GameScene: SKScene {
         fatalError("NSCoder not supported")
     }
     
-    override init(size: CGSize) {
+    init(size: CGSize, columns: Int, rows: Int) {
         super.init(size: size)
         
         anchorPoint = CGPoint(x: 0, y: 1.0)
@@ -44,15 +48,20 @@ class GameScene: SKScene {
         // 游戏 UI 从左到右是包含关系及其类型
         // GameScene(SKScene) -> background(SKSpriteNode) -> gameLayer(SKNode) -> shapeLayer(SKNode) -> gameBoard(SKSpriteNode)
         
-        let background = SKSpriteNode(imageNamed: "background")
+//        let background = SKSpriteNode(imageNamed: "background")
+        let backgroundTextture = SKTexture(imageNamed: "background")
+        let background = SKSpriteNode(texture: backgroundTextture, size: size) // 用 Textture 的方式可以覆盖整个 UI，不受图片大小限制
         background.position = CGPoint(x: 0, y: 0)
         background.anchorPoint = CGPoint(x: 0, y: 1.0)
         addChild(background)
         
         addChild(gameLayer)
         
+        NSLog("with=\(BlockSize * CGFloat(columns)), height=\(BlockSize * CGFloat(rows))")
+        
         let gameBoardTexture = SKTexture(imageNamed: "gameboard")
-        let gameBoard = SKSpriteNode(texture: gameBoardTexture, size: CGSizeMake(BlockSize * CGFloat(NumColumns), BlockSize * CGFloat(NumRows)))
+        //        let gameBoard = SKSpriteNode(texture: gameBoardTexture, size: CGSizeMake(BlockSize * CGFloat(NumColumns), BlockSize * CGFloat(NumRows)))
+        let gameBoard = SKSpriteNode(texture: gameBoardTexture, size: CGSizeMake(BlockSize * CGFloat(columns), BlockSize * CGFloat(rows)))
         gameBoard.anchorPoint = CGPoint(x:0, y:1.0)
         gameBoard.position = LayerPosition
         
